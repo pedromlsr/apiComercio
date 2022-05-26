@@ -7,6 +7,9 @@ Descrição
 Projeto simples de API REST utilizando o framework Spring
 
 Script do banco de dados
+
+///
+
 CREATE TABLE public.fornecedor (
   id_fornecedor serial4 NOT NULL,
   cnpj int8 NOT NULL,
@@ -27,11 +30,15 @@ CREATE TABLE public.fornecedor (
   PRIMARY KEY (id_fornecedor)
 );
 
+///
+
 CREATE TABLE public.categoria (
   id_categoria serial4 NOT NULL,
   nome_categoria varchar(255),
   PRIMARY KEY (id_categoria)
 );
+
+///
 
 CREATE TABLE public.produto (
   id_produto serial4 NOT NULL,
@@ -43,6 +50,9 @@ CREATE TABLE public.produto (
   FOREIGN KEY (id_fornecedor) REFERENCES public.fornecedor(id_fornecedor),
   FOREIGN KEY (id_categoria) REFERENCES public.categoria(id_categoria)
 );
+
+///
+
 Conceitos e recursos utilizados na aplicação
 Tratamento de recursividade infinita;
 Tratamento de exceções (de forma global);
