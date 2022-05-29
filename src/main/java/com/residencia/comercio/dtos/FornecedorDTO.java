@@ -4,23 +4,22 @@ import java.util.Date;
 
 public class FornecedorDTO {
 	private Integer idFornecedor;
-
-	private Integer cnpj;
+	private String cnpj;
 	private String tipo;
 	private String razaoSocial;
-	private String uf;
 	private String telefone;
 	private String email;
 	private String nomeFantasia;
 	private String statusSituacao;
-	private String bairro;
+	private Date dataAbertura;
+	private String numero;
 	private String logradouro;
-	private Integer numero;
+	private String bairro;
 	private String complemento;
 	private String cep;
 	private String municipio;
-	private Date dataAbertura;
-	// private List<ProdutoDTO> produtoDTOList;
+	private String uf;
+//	private List<ProdutoDTO> produtoDTOList;
 
 	public Integer getIdFornecedor() {
 		return idFornecedor;
@@ -30,11 +29,11 @@ public class FornecedorDTO {
 		this.idFornecedor = idFornecedor;
 	}
 
-	public Integer getCnpj() {
+	public String getCnpj() {
 		return cnpj;
 	}
 
-	public void setCnpj(Integer cnpj) {
+	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
 
@@ -110,11 +109,11 @@ public class FornecedorDTO {
 		this.logradouro = logradouro;
 	}
 
-	public Integer getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Integer numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
@@ -148,15 +147,6 @@ public class FornecedorDTO {
 
 	public void setDataAbertura(Date dataAbertura) {
 		this.dataAbertura = dataAbertura;
-	}
-
-	@Override
-	public String toString() {
-		return "FornecedorDTO [idFornecedor=" + idFornecedor + ", cnpj=" + cnpj + ", tipo=" + tipo + ", razaoSocial="
-				+ razaoSocial + ", uf=" + uf + ", telefone=" + telefone + ", email=" + email + ", nomeFantasia="
-				+ nomeFantasia + ", statusSituacao=" + statusSituacao + ", bairro=" + bairro + ", logradouro="
-				+ logradouro + ", numero=" + numero + ", complemento=" + complemento + ", cep=" + cep + ", municipio="
-				+ municipio + ", dataAbertura=" + dataAbertura + "]";
 	}
 
 }
