@@ -23,7 +23,7 @@ public class Produto {
 	@Column(name = "id_produto")
 	private Integer idProduto;
 
-	@NotBlank(message = "O nome do produto não pode ficar em branco.")
+	@NotBlank(message = "O sku do produto não pode ficar em branco.")
 	@Column(name = "sku")
 	private String sku;
 

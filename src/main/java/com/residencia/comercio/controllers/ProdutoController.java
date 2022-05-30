@@ -83,7 +83,7 @@ public class ProdutoController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Produto> updateProduto(@RequestBody Produto produto) {
+	public ResponseEntity<Produto> updateProduto(@Valid @RequestBody Produto produto) {
 		return new ResponseEntity<>(produtoService.updateProduto(produto), HttpStatus.OK);
 	}
 

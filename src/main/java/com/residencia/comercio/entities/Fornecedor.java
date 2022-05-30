@@ -10,6 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,9 +30,8 @@ public class Fornecedor {
 	private Integer idFornecedor;
 
 	@Column(name = "cnpj")
-//	@NotBlank(message = "O número do CNPJ não pode ficar em branco.")
-//	@CNPJ
-//	@Digits(message="O CNPJ deve conter 14 números.", fraction = 0, integer = 14)
+	@NotBlank(message = "O número do CNPJ não pode ficar em branco.")
+	@CNPJ(message = "Confira o padrão do CNPJ inserido.")
 	private String cnpj;
 
 	@Column(name = "tipo")
@@ -36,12 +41,13 @@ public class Fornecedor {
 	private String razaoSocial;
 
 	@Column(name = "uf")
+	@Size(min = 2, max = 2, message = "A UF deve conter 2 caracteres.")
 	private String uf;
 
 	@Column(name = "telefone")
 	private String telefone;
 
-//	@Email
+	@Email(message = "Confira o padrão do email inserido.")
 	@Column(name = "email")
 	private String email;
 
@@ -64,6 +70,7 @@ public class Fornecedor {
 	private String complemento;
 
 	@Column(name = "cep")
+	@Pattern(regexp = "([0-9]{5}[-]?[0-9]{3})", message = "Confira o padrão do CEP inserido.")
 	private String cep;
 
 	@Column(name = "municipio")

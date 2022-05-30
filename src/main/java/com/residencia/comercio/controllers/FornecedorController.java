@@ -2,6 +2,8 @@ package com.residencia.comercio.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,15 @@ import com.residencia.comercio.dtos.EmpresaDTO;
 import com.residencia.comercio.dtos.EnderecoDTO;
 import com.residencia.comercio.dtos.FornecedorDTO;
 import com.residencia.comercio.entities.Fornecedor;
+import com.residencia.comercio.exceptions.ErrorResponse;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
 import com.residencia.comercio.services.FornecedorService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/fornecedor")
@@ -28,6 +37,10 @@ public class FornecedorController {
 	FornecedorService fornecedorService;
 
 	@GetMapping
+	@Operation(summary = "Busca todos os fornecedores cadastrados.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Retorna todos os fornecedores cadastrados.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Fornecedor.class))),
+			@ApiResponse(responseCode = "404", description = "Falha. Nenhum fornecedor encontrado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<List<Fornecedor>> findAllFornecedor() {
 		List<Fornecedor> fornecedorList = fornecedorService.findAllFornecedor();
 
@@ -39,6 +52,11 @@ public class FornecedorController {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Busca um fornecedor cadastrado através do seu ID.", parameters = {
+			@Parameter(name = "id", description = "Id do fornecedor desejado.") }, responses = {
+					@ApiResponse(responseCode = "200", description = "Sucesso. Retorna o fornecedor desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Fornecedor.class))),
+					@ApiResponse(responseCode = "404", description = "Falha. Não há um fornecedor cadastrado com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+					@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Fornecedor> findFornecedorById(@PathVariable Integer id) {
 		Fornecedor fornecedor = fornecedorService.findFornecedorById(id);
 		if (fornecedor == null) {
@@ -74,7 +92,10 @@ public class FornecedorController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Fornecedor> saveFornecedor(@RequestBody Fornecedor fornecedor) {
+	@Operation(summary = "Cadastra um novo fornecedor.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Cadastra um novo fornecedor.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Fornecedor.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
+	public ResponseEntity<Fornecedor> saveFornecedor(@Valid @RequestBody Fornecedor fornecedor) {
 		return new ResponseEntity<>(fornecedorService.saveFornecedor(fornecedor), HttpStatus.CREATED);
 	}
 
@@ -96,10 +117,10 @@ public class FornecedorController {
 //	}
 
 	@PutMapping
-	public ResponseEntity<Fornecedor> updateFornecedor(@RequestBody Fornecedor fornecedor) {
+	public ResponseEntity<Fornecedor> updateFornecedor(@Valid @RequestBody Fornecedor fornecedor) {
 		return new ResponseEntity<>(fornecedorService.updateFornecedor(fornecedor), HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/cep/{id}/{cep}")
 	public ResponseEntity<FornecedorDTO> updateFornecedorByCep(@PathVariable Integer id, @PathVariable String cep) {
 		return new ResponseEntity<>(fornecedorService.updateFornecedorByCep(id, cep), HttpStatus.OK);
