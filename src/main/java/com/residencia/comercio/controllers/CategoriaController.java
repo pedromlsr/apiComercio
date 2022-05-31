@@ -91,6 +91,9 @@ public class CategoriaController {
 	}
 
 	@PostMapping("/dto")
+	@Operation(summary = "Cadastra uma nova categoria.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Cadastra uma nova categoria.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@Valid @RequestBody CategoriaDTO categoriaDTO) {
 		return new ResponseEntity<>(categoriaService.saveCategoriaDTO(categoriaDTO), HttpStatus.CREATED);
 	}
@@ -103,6 +106,10 @@ public class CategoriaController {
 	}
 
 	@PutMapping
+	@Operation(summary = "Atualiza uma categoria cadastrada.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Atualiza a categoria desejada.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há uma categoria com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Categoria> updateCategoria(@Valid @RequestBody Categoria categoria) {
 		if (categoriaService.findCategoriaById(categoria.getIdCategoria()) == null) {
 			throw new NoSuchElementFoundException(
@@ -113,6 +120,10 @@ public class CategoriaController {
 	}
 
 	@DeleteMapping
+	@Operation(summary = "Exclui uma categoria cadastrada.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui a categoria desejada.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há uma categoria com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteCategoria(@RequestBody Categoria categoria) {
 		if (categoriaService.findCategoriaById(categoria.getIdCategoria()) == null) {
 			throw new NoSuchElementFoundException(
@@ -124,6 +135,10 @@ public class CategoriaController {
 	}
 
 	@DeleteMapping("/{id}")
+	@Operation(summary = "Exclui uma categoria cadastrada através do seu ID.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui a categoria desejada.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há uma categoria com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer id) {
 		if (categoriaService.findCategoriaById(id) == null) {
 			throw new NoSuchElementFoundException(

@@ -56,7 +56,7 @@ public class CategoriaService {
 
 		Categoria categoriaBD = categoriaRepository.save(categoriaConvertida);
 
-		categoriaBD.setNomeImagem(file.getOriginalFilename() + "_" + categoriaBD.getIdCategoria());
+		categoriaBD.setNomeImagem(categoriaBD.getIdCategoria() + "_" + file.getOriginalFilename());
 
 		Categoria categoriaAtualizada = categoriaRepository.save(categoriaBD);
 
@@ -69,7 +69,7 @@ public class CategoriaService {
 
 //		Cuidado para definir um endereço válido quando for fazer de verdade
 		String corpoEmail = "Foi cadastrada uma nova categoria:" + categoriaAtualizada.toString();
-		emailService.enviarEmailTexto("teste@teste.com", "Cadastro de Categoria", corpoEmail);
+//		emailService.enviarEmailTexto("teste@teste.com", "Cadastro de Categoria", corpoEmail);
 		emailService.enviarEmailHtml(file, "teste@teste.com", "Cadastro de Categoria", corpoEmail);
 
 		return categoriaAtualizada;

@@ -110,6 +110,9 @@ public class FornecedorController {
 	}
 
 	@PostMapping("/dto")
+	@Operation(summary = "Cadastra um novo fornecedor.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Cadastra um novo fornecedor.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FornecedorDTO.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<FornecedorDTO> saveFornecedorDTO(@Valid @RequestBody FornecedorDTO fornecedorDTO) {
 		return new ResponseEntity<>(fornecedorService.saveFornecedorDTO(fornecedorDTO), HttpStatus.CREATED);
 	}
@@ -125,6 +128,10 @@ public class FornecedorController {
 	}
 
 	@PutMapping
+	@Operation(summary = "Atualiza um fornecedor cadastrado.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Atualiza o fornecedor desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Fornecedor.class))),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um fornecedor com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Fornecedor> updateFornecedor(@Valid @RequestBody Fornecedor fornecedor) {
 		if (fornecedorService.findFornecedorById(fornecedor.getIdFornecedor()) == null) {
 			throw new NoSuchElementFoundException("Não foi possível atualizar. O Fornecedor de id = "
@@ -140,6 +147,10 @@ public class FornecedorController {
 	}
 
 	@DeleteMapping
+	@Operation(summary = "Exclui um fornecedor cadastrado.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui o fornecedor desejado.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um fornecedor com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteFornecedor(@RequestBody Fornecedor fornecedor) {
 		if (fornecedorService.findFornecedorById(fornecedor.getIdFornecedor()) == null) {
 			throw new NoSuchElementFoundException("Não foi possível excluir. O Fornecedor de id = "
@@ -152,6 +163,10 @@ public class FornecedorController {
 	}
 
 	@DeleteMapping("/{id}")
+	@Operation(summary = "Exclui um fornecedor cadastrado através do seu ID.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui o fornecedor desejado.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um fornecedor com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteFornecedorById(@PathVariable Integer id) {
 		if (fornecedorService.findFornecedorById(id) == null) {
 			throw new NoSuchElementFoundException(

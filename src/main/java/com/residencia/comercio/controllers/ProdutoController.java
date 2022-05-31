@@ -107,11 +107,18 @@ public class ProdutoController {
 	}
 
 	@PostMapping("/dto")
+	@Operation(summary = "Cadastra um novo produto.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Cadastra um novo produto.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoDTO.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@Valid @RequestBody ProdutoDTO produtoDTO) {
 		return new ResponseEntity<>(produtoService.saveProdutoDTO(produtoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
+	@Operation(summary = "Atualiza um produto cadastrado.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Atualiza o produto desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um produto com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Produto> updateProduto(@Valid @RequestBody Produto produto) {
 		if (produtoService.findProdutoById(produto.getIdProduto()) == null) {
 			throw new NoSuchElementFoundException(
@@ -122,7 +129,11 @@ public class ProdutoController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deletePoduto(Produto produto) {
+	@Operation(summary = "Exclui um produto cadastrado.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui o produto desejado.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um produto com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
+	public ResponseEntity<String> deletePoduto(@RequestBody Produto produto) {
 		if (produtoService.findProdutoById(produto.getIdProduto()) == null) {
 			throw new NoSuchElementFoundException(
 					"Não foi possível excluir. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.");
@@ -134,6 +145,10 @@ public class ProdutoController {
 	}
 
 	@DeleteMapping("/{id}")
+	@Operation(summary = "Exclui um produto cadastrado através do seu ID.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Exclui o produto desejado.", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Falha. Não há um produto com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteProdutoById(@PathVariable Integer id) {
 		if (produtoService.findProdutoById(id) == null) {
 			throw new NoSuchElementFoundException(

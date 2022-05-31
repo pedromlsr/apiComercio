@@ -57,7 +57,6 @@ public class EmailService {
 		helper.setTo("someone@abc.com");
 		helper.setSubject("This is the test message for testing gmail smtp server using spring mail");
 		helper.setFrom("abc@gmail.com");
-		helper.addAttachment(htmlMsg, file);
 		emailSender.send(mimeMessage);
 		
 	}
