@@ -21,8 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.comercio.dtos.ProdutoDTO;
 import com.residencia.comercio.entities.Produto;
+import com.residencia.comercio.exceptions.ErrorResponse;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
 import com.residencia.comercio.services.ProdutoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/produto")
@@ -32,6 +39,10 @@ public class ProdutoController {
 	ProdutoService produtoService;
 
 	@GetMapping
+	@Operation(summary = "Busca todos os produtos cadastrados.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Retorna todos os produtos cadastrados.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+			@ApiResponse(responseCode = "404", description = "Falha. Nenhum produto encontrado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<List<Produto>> findAllProduto() {
 		List<Produto> produtoList = produtoService.findAllProduto();
 
@@ -43,6 +54,11 @@ public class ProdutoController {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Busca um produto cadastrado através do seu ID.", parameters = {
+			@Parameter(name = "id", description = "Id do produto desejado.") }, responses = {
+					@ApiResponse(responseCode = "200", description = "Sucesso. Retorna o produto desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+					@ApiResponse(responseCode = "404", description = "Falha. Não há um produto cadastrado com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+					@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Produto> findProdutoById(@PathVariable Integer id) {
 		Produto produto = produtoService.findProdutoById(id);
 		if (produto == null) {
@@ -53,11 +69,16 @@ public class ProdutoController {
 	}
 
 	@GetMapping("/dto/{id}")
+	@Operation(summary = "Busca um produto cadastrado através do seu ID.", parameters = {
+			@Parameter(name = "id", description = "Id do produto desejado.") }, responses = {
+					@ApiResponse(responseCode = "200", description = "Sucesso. Retorna o produto desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoDTO.class))),
+					@ApiResponse(responseCode = "404", description = "Falha. Não há um produto cadastrado com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+					@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<ProdutoDTO> findProdutoDTOById(@PathVariable Integer id) {
 		ProdutoDTO produtoDTO = produtoService.findProdutoDTOById(id);
 
 		if (produtoDTO == null) {
-			throw new NoSuchElementFoundException("Não foi encontrado Produto com o id = " + id + ".");
+			throw new NoSuchElementFoundException("O Produto de id = " + id + " não foi encontrado.");
 		} else {
 			return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
 		}
@@ -78,53 +99,49 @@ public class ProdutoController {
 	}
 
 	@PostMapping
+	@Operation(summary = "Cadastra um novo produto.", responses = {
+			@ApiResponse(responseCode = "200", description = "Sucesso. Cadastra um novo produto.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Produto> saveProduto(@Valid @RequestBody Produto produto) {
 		return new ResponseEntity<>(produtoService.saveProduto(produto), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/dto")
-	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) {
+	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@Valid @RequestBody ProdutoDTO produtoDTO) {
 		return new ResponseEntity<>(produtoService.saveProdutoDTO(produtoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
 	public ResponseEntity<Produto> updateProduto(@Valid @RequestBody Produto produto) {
+		if (produtoService.findProdutoById(produto.getIdProduto()) == null) {
+			throw new NoSuchElementFoundException(
+					"Não foi possível atualizar. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.");
+		}
+
 		return new ResponseEntity<>(produtoService.updateProduto(produto), HttpStatus.OK);
 	}
-
-//	@PutMapping("/{id}")
-//	public ResponseEntity<String> updateProdutoById(@PathVariable Integer id, @RequestBody Produto produto) {
-//		Produto produtoAtualizado = produtoService.updateProdutoById(produto, id);
-//		
-//		if (null == produtoAtualizado) {
-//			return new ResponseEntity<>(produtoAtualizado, HttpStatus.BAD_REQUEST);
-//		} else {
-//			return new ResponseEntity<>(produtoAtualizado, HttpStatus.OK);
-//		}
-//	}
 
 	@DeleteMapping
 	public ResponseEntity<String> deletePoduto(Produto produto) {
 		if (produtoService.findProdutoById(produto.getIdProduto()) == null) {
-			return new ResponseEntity<>(
-					"Não foi possível excluir. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.",
-					HttpStatus.NOT_FOUND);
-		} else {
-			produtoService.deleteProduto(produto);
-			return new ResponseEntity<>("O Produto de id = " + produto.getIdProduto() + " foi excluído com sucesso.",
-					HttpStatus.OK);
+			throw new NoSuchElementFoundException(
+					"Não foi possível excluir. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.");
 		}
+
+		produtoService.deleteProduto(produto);
+		return new ResponseEntity<>("O Produto de id = " + produto.getIdProduto() + " foi excluído com sucesso.",
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteProdutoById(@PathVariable Integer id) {
 		if (produtoService.findProdutoById(id) == null) {
-			return new ResponseEntity<>("Não foi possível excluir. O Produto de id = " + id + " não foi encontrado.",
-					HttpStatus.NOT_FOUND);
-		} else {
-			produtoService.deleteProdutoById(id);
-			return new ResponseEntity<>("O Produto de id = " + id + " foi excluído com sucesso.", HttpStatus.OK);
+			throw new NoSuchElementFoundException(
+					"Não foi possível excluir. O Produto de id = " + id + " não foi encontrado.");
 		}
+
+		produtoService.deleteProdutoById(id);
+		return new ResponseEntity<>("O Produto de id = " + id + " foi excluído com sucesso.", HttpStatus.OK);
 	}
 
 }

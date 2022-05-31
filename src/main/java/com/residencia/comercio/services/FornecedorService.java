@@ -63,6 +63,12 @@ public class FornecedorService {
 		return convertEntityToDTO(fornecedorRepository.save(setEmpresaDTOToFornecedor(consultarDadosPorCnpj(cnpj))));
 	}
 
+	public FornecedorDTO saveFornecedorByCnpjCep(String cnpj, String cep) {
+		Fornecedor fornecedorSemEndereco = setEmpresaDTOToFornecedor(consultarDadosPorCnpj(cnpj));
+		Fornecedor fornecedorCompleto = setEnderecoDTOToFornecedor(fornecedorSemEndereco, consultarEnderecoPorCep(cep));
+		return convertEntityToDTO(fornecedorRepository.save(fornecedorCompleto));
+	}
+
 	public Fornecedor updateFornecedor(Fornecedor fornecedor) {
 		return fornecedorRepository.save(fornecedor);
 	}

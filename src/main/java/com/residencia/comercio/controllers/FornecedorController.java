@@ -67,14 +67,24 @@ public class FornecedorController {
 	}
 
 	@GetMapping("/dto/{id}")
+	@Operation(summary = "Busca um fornecedor cadastrado através do seu ID.", parameters = {
+			@Parameter(name = "id", description = "Id do fornecedor desejado.") }, responses = {
+					@ApiResponse(responseCode = "200", description = "Sucesso. Retorna o fornecedor desejado.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FornecedorDTO.class))),
+					@ApiResponse(responseCode = "404", description = "Falha. Não há um fornecedor cadastrado com o ID fornecido.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+					@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<FornecedorDTO> findFornecedorDTOById(@PathVariable Integer id) {
-		return new ResponseEntity<>(fornecedorService.findFornecedorDTOById(id), HttpStatus.OK);
+		FornecedorDTO fornecedorDto = fornecedorService.findFornecedorDTOById(id);
+		if (fornecedorDto == null) {
+			throw new NoSuchElementFoundException("O Fornecedor de id = " + id + " não foi encontrado.");
+		} else {
+			return new ResponseEntity<>(fornecedorDto, HttpStatus.OK);
+		}
 	}
 
 	@GetMapping("/cnpj/{cnpj}")
-	public ResponseEntity<EmpresaDTO> consultarDadosPorCnpj(String cnpj) {
+	public ResponseEntity<EmpresaDTO> consultarDadosPorCnpj(@PathVariable String cnpj) {
 		EmpresaDTO empresaDTO = fornecedorService.consultarDadosPorCnpj(cnpj);
-		if (empresaDTO == null) {
+		if (empresaDTO.getCnpj() == null) {
 			throw new NoSuchElementFoundException("Não foram encontrados dados para o CNPJ informado.");
 		} else {
 			return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
@@ -82,10 +92,10 @@ public class FornecedorController {
 	}
 
 	@GetMapping("/cep/{cep}")
-	public ResponseEntity<EnderecoDTO> consultarEnderecoPorCep(String cep) {
+	public ResponseEntity<EnderecoDTO> consultarEnderecoPorCep(@PathVariable String cep) {
 		EnderecoDTO enderecoDTO = fornecedorService.consultarEnderecoPorCep(cep);
-		if (enderecoDTO == null) {
-			throw new NoSuchElementFoundException("Não foram encontrados dados para o CEP informado.");
+		if (enderecoDTO.getCep() == null) {
+			throw new NoSuchElementFoundException("Não foi encontrado um endereço para o CEP informado.");
 		} else {
 			return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
 		}
@@ -109,15 +119,18 @@ public class FornecedorController {
 		return new ResponseEntity<>(fornecedorService.saveFornecedorByCnpj(cnpj), HttpStatus.CREATED);
 	}
 
-//	@PostMapping("/cnpj")
-//	public ResponseEntity<Fornecedor> saveFornecedorCNPJ(@RequestParam String cnpj) {
-//		Fornecedor fornecedor = new Fornecedor();
-//		Fornecedor novoFornecedor = fornecedorService.saveFornecedor(fornecedor);
-//		return new ResponseEntity<>(novoFornecedor, HttpStatus.CREATED);
-//	}
+	@PostMapping("/cnpj-cep/{cnpj}/{cep}")
+	public ResponseEntity<FornecedorDTO> saveFornecedorByCnpjCep(@PathVariable String cnpj, @PathVariable String cep) {
+		return new ResponseEntity<>(fornecedorService.saveFornecedorByCnpjCep(cnpj, cep), HttpStatus.CREATED);
+	}
 
 	@PutMapping
 	public ResponseEntity<Fornecedor> updateFornecedor(@Valid @RequestBody Fornecedor fornecedor) {
+		if (fornecedorService.findFornecedorById(fornecedor.getIdFornecedor()) == null) {
+			throw new NoSuchElementFoundException("Não foi possível atualizar. O Fornecedor de id = "
+					+ fornecedor.getIdFornecedor() + " não foi encontrado.");
+		}
+
 		return new ResponseEntity<>(fornecedorService.updateFornecedor(fornecedor), HttpStatus.OK);
 	}
 
@@ -129,25 +142,24 @@ public class FornecedorController {
 	@DeleteMapping
 	public ResponseEntity<String> deleteFornecedor(@RequestBody Fornecedor fornecedor) {
 		if (fornecedorService.findFornecedorById(fornecedor.getIdFornecedor()) == null) {
-			return new ResponseEntity<>("Não foi possível excluir. O Fornecedor de id = " + fornecedor.getIdFornecedor()
-					+ " não foi encontrado.", HttpStatus.NOT_FOUND);
-		} else {
-			fornecedorService.deleteFornecedor(fornecedor);
-			return new ResponseEntity<>(
-					"O Fornecedor de id = " + fornecedor.getIdFornecedor() + "foi excluído com sucesso.",
-					HttpStatus.OK);
+			throw new NoSuchElementFoundException("Não foi possível excluir. O Fornecedor de id = "
+					+ fornecedor.getIdFornecedor() + " não foi encontrado.");
 		}
+
+		fornecedorService.deleteFornecedor(fornecedor);
+		return new ResponseEntity<>(
+				"O Fornecedor de id = " + fornecedor.getIdFornecedor() + "foi excluído com sucesso.", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteFornecedorById(@PathVariable Integer id) {
 		if (fornecedorService.findFornecedorById(id) == null) {
-			return new ResponseEntity<>("Não foi possível excluir. O Fornecedor de id = " + id + " não foi encontrado.",
-					HttpStatus.NOT_FOUND);
-		} else {
-			fornecedorService.deleteFornecedorById(id);
-			return new ResponseEntity<>("O Fornecedor de id = " + id + " foi excluído com sucesso.", HttpStatus.OK);
+			throw new NoSuchElementFoundException(
+					"Não foi possível excluir. O Fornecedor de id = " + id + " não foi encontrado.");
 		}
+
+		fornecedorService.deleteFornecedorById(id);
+		return new ResponseEntity<>("O Fornecedor de id = " + id + " foi excluído com sucesso.", HttpStatus.OK);
 	}
 
 }

@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
@@ -32,7 +31,7 @@ public class Fornecedor {
 
 	@Column(name = "cnpj")
 	@NotBlank(message = "O número do CNPJ não pode ficar em branco.")
-	@CNPJ(message = "Confira o padrão do CNPJ inserido.")
+	@CNPJ(message = "Confira o padrão do CNPJ.")
 	private String cnpj;
 
 	@Column(name = "tipo")
@@ -42,19 +41,14 @@ public class Fornecedor {
 	@NotBlank(message = "A razão social não pode ficar em branco.")
 	private String razaoSocial;
 
-	@Column(name = "uf")
-	@Size(min = 2, max = 2, message = "A UF deve conter 2 caracteres.")
-	private String uf;
-	
 	@Column(name = "telefone")
 	@NotBlank(message = "O telefone não pode ficar em branco.")
-	@Size(max = 13, message = "O telefone não pode conter mais do que 13 caracters.")
-	@Pattern(regexp = "([(]?[0-9]{2}[)]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
+	@Pattern(regexp = "([(]?[0-9]{2}[)]?[ ]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
 	private String telefone;
 
 	@Column(name = "email")
 	@NotBlank(message = "O email não pode ficar em branco.")
-	@Email(message = "Confira o padrão do email inserido.")
+	@Email(message = "Confira o padrão do email.")
 	private String email;
 
 	@Column(name = "nome_fantasia")
@@ -64,10 +58,12 @@ public class Fornecedor {
 	@Column(name = "status_situacao")
 	private String statusSituacao;
 
-	@Column(name = "bairro")
-	private String bairro;
+	@Column(name = "data_abertura")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dataAbertura;
 
 	@Column(name = "logradouro")
+//	@NotBlank(message = "O logradouro não pode ficar em branco.")
 	private String logradouro;
 
 	@Column(name = "numero")
@@ -76,16 +72,23 @@ public class Fornecedor {
 	@Column(name = "complemento")
 	private String complemento;
 
+	@Column(name = "bairro")
+//	@NotBlank(message = "O bairro não pode ficar em branco.")
+	private String bairro;
+
 	@Column(name = "cep")
-	@Pattern(regexp = "([0-9]{5}[-]?[0-9]{3})", message = "Confira o padrão do CEP inserido.")
+//	@NotBlank(message = "O cep não pode ficar em branco.")
+	@Pattern(regexp = "([0-9]{5}[-]?[0-9]{3})", message = "Confira o padrão do CEP.")
 	private String cep;
 
 	@Column(name = "municipio")
+//	@NotBlank(message = "O municipio não pode ficar em branco.")
 	private String municipio;
 
-	@Column(name = "data_abertura")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dataAbertura;
+	@Column(name = "uf")
+//	@NotBlank(message = "A UF não pode ficar em branco.")
+	@Pattern(regexp = "[a-zA-Z]{2}", message = "Confira o padrão da UF.")
+	private String uf;
 
 	@OneToMany(mappedBy = "fornecedor")
 	private List<Produto> produtoList;

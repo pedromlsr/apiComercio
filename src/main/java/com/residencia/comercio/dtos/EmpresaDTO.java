@@ -10,18 +10,6 @@ public class EmpresaDTO {
 	private String situacao;
 	private String abertura;
 	private String numero;
-//	private String porte;
-//	private String data_situacao;
-//	private String motivo_situacao;
-//	private String natureza_juridica;
-//	private String ultima_atualizacao;
-//	private String status;
-//	private String logradouro;
-//	private String complemento;
-//	private String cep;
-//	private String bairro;
-//	private String municipio;
-//	private String uf;
 
 	public String getSituacao() {
 		return situacao;

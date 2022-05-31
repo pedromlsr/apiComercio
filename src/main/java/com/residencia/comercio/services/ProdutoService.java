@@ -46,23 +46,6 @@ public class ProdutoService {
 		return produtoRepository.save(produto);
 	}
 
-//	public Produto updateProdutoById(Produto produto, Integer id) {
-//		Produto produtoBD = produtoRepository.findById(id).isPresent()
-//				? produtoRepository.findById(id).get()
-//				: null;
-//		
-//		Produto produtoAtualizado = null;
-//		if(null != produtoBD) {
-//			produtoBD.setNomeProduto(produto.getNomeProduto());
-//			produtoBD.setSku(produto.getSku());
-//			produtoBD.setFornecedor(produto.getFornecedor());
-//			produtoBD.setCategoria(produto.getCategoria());
-//			
-//			produtoAtualizado = produtoRepository.save(produtoBD);
-//			//...
-//		}
-//	}
-
 	public void deleteProduto(Produto produto) {
 		produtoRepository.delete(produto);
 	}

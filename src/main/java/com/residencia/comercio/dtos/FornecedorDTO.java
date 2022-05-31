@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
@@ -13,40 +12,53 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class FornecedorDTO {
 	private Integer idFornecedor;
-	
+
 	@NotBlank(message = "O número do CNPJ não pode ficar em branco.")
-	@CNPJ(message = "Confira o padrão do CNPJ inserido.")
+	@CNPJ(message = "Confira o padrão do CNPJ.")
 	private String cnpj;
-	
+
 	private String tipo;
-	
+
 	@NotBlank(message = "A razão social não pode ficar em branco.")
 	private String razaoSocial;
-	
+
 	@NotBlank(message = "O telefone não pode ficar em branco.")
-	@Size(max = 13, message = "O telefone não pode conter mais do que 13 caracters.")
-	@Pattern(regexp = "([(]?[0-9]{2}[)]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
+	@Pattern(regexp = "([(]?[0-9]{2}[)]?[ ]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
 	private String telefone;
-	
+
 	@NotBlank(message = "O email não pode ficar em branco.")
-	@Email(message = "Confira o padrão do email inserido.")
+	@Email(message = "Confira o padrão do email.")
 	private String email;
-	
+
 	@NotBlank(message = "O nome fantasia não pode ficar em branco.")
 	private String nomeFantasia;
-	
+
 	private String statusSituacao;
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataAbertura;
-	
-	private String numero;
+
+	@NotBlank(message = "O logradouro não pode ficar em branco.")
 	private String logradouro;
-	private String bairro;
+
+	private String numero;
+
 	private String complemento;
+
+	@NotBlank(message = "O bairro não pode ficar em branco.")
+	private String bairro;
+
+	@NotBlank(message = "O cep não pode ficar em branco.")
+	@Pattern(regexp = "([0-9]{5}[-]?[0-9]{3})", message = "Confira o padrão do CEP.")
 	private String cep;
+
+	@NotBlank(message = "O municipio não pode ficar em branco.")
 	private String municipio;
+
+	@NotBlank(message = "A UF não pode ficar em branco.")
+	@Pattern(regexp = "[a-zA-Z]{2}", message = "Confira o padrão da UF.")
 	private String uf;
+
 //	private List<ProdutoDTO> produtoDTOList;
 
 	public Integer getIdFornecedor() {
