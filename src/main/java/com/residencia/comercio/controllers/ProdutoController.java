@@ -3,6 +3,7 @@ package com.residencia.comercio.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,26 +51,30 @@ public class ProdutoController {
 			return new ResponseEntity<>(produto, HttpStatus.OK);
 		}
 	}
-	
-	@GetMapping("/id")
-	public ResponseEntity<Produto> findByIdRequest(@RequestParam Integer id) {
-		Produto produto = produtoService.findProdutoById(id);
-		if (produto == null) {
-			throw new NoSuchElementFoundException("O Produto de id = " + id + " não foi encontrado.");
-		} else {
-			return new ResponseEntity<>(produto, HttpStatus.OK);
-		}
-	}
 
 	@GetMapping("/dto/{id}")
 	public ResponseEntity<ProdutoDTO> findProdutoDTOById(@PathVariable Integer id) {
 		ProdutoDTO produtoDTO = produtoService.findProdutoDTOById(id);
-		
+
 		if (produtoDTO == null) {
 			throw new NoSuchElementFoundException("Não foi encontrado Produto com o id = " + id + ".");
 		} else {
 			return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
 		}
+	}
+
+//	Request - localhost:8080/comercio/produto/query?sku=
+	@GetMapping("/query")
+	public ResponseEntity<Produto> findByIdQuery(
+			@RequestParam @NotBlank(message = "O sku deve ser preenchido.") String sku) {
+		return new ResponseEntity<>(null, HttpStatus.CONTINUE);
+	}
+
+//	Request - localhost:8080/comercio/produto/request?id=
+	@GetMapping("/request")
+	public ResponseEntity<Produto> findByIdRequest(
+			@RequestParam @NotBlank(message = "O id deve ser preenchido.") Integer id) {
+		return new ResponseEntity<>(null, HttpStatus.CONTINUE);
 	}
 
 	@PostMapping
@@ -81,7 +86,7 @@ public class ProdutoController {
 	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) {
 		return new ResponseEntity<>(produtoService.saveProdutoDTO(produtoDTO), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping
 	public ResponseEntity<Produto> updateProduto(@Valid @RequestBody Produto produto) {
 		return new ResponseEntity<>(produtoService.updateProduto(produto), HttpStatus.OK);
@@ -101,17 +106,21 @@ public class ProdutoController {
 	@DeleteMapping
 	public ResponseEntity<String> deletePoduto(Produto produto) {
 		if (produtoService.findProdutoById(produto.getIdProduto()) == null) {
-			return new ResponseEntity<>("Não foi possível excluir. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(
+					"Não foi possível excluir. O Produto de id = " + produto.getIdProduto() + " não foi encontrado.",
+					HttpStatus.NOT_FOUND);
 		} else {
 			produtoService.deleteProduto(produto);
-			return new ResponseEntity<>("O Produto de id = " + produto.getIdProduto() + " foi excluído com sucesso.", HttpStatus.OK);
+			return new ResponseEntity<>("O Produto de id = " + produto.getIdProduto() + " foi excluído com sucesso.",
+					HttpStatus.OK);
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteProdutoById(@PathVariable Integer id) {
 		if (produtoService.findProdutoById(id) == null) {
-			return new ResponseEntity<>("Não foi possível excluir. O Produto de id = " + id + " não foi encontrado.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Não foi possível excluir. O Produto de id = " + id + " não foi encontrado.",
+					HttpStatus.NOT_FOUND);
 		} else {
 			produtoService.deleteProdutoById(id);
 			return new ResponseEntity<>("O Produto de id = " + id + " foi excluído com sucesso.", HttpStatus.OK);

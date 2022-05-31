@@ -23,12 +23,12 @@ public class Produto {
 	@Column(name = "id_produto")
 	private Integer idProduto;
 
-	@NotBlank(message = "O sku do produto não pode ficar em branco.")
 	@Column(name = "sku")
+	@NotBlank(message = "O sku do produto não pode ficar em branco.")
 	private String sku;
 
-	@NotBlank(message = "O nome do produto não pode ficar em branco.")
 	@Column(name = "nome_produto")
+	@NotBlank(message = "O nome do produto não pode ficar em branco.")
 	private String nomeProduto;
 
 	@ManyToOne

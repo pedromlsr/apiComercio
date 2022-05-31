@@ -100,7 +100,7 @@ public class FornecedorController {
 	}
 
 	@PostMapping("/dto")
-	public ResponseEntity<FornecedorDTO> saveFornecedorDTO(@RequestBody FornecedorDTO fornecedorDTO) {
+	public ResponseEntity<FornecedorDTO> saveFornecedorDTO(@Valid @RequestBody FornecedorDTO fornecedorDTO) {
 		return new ResponseEntity<>(fornecedorService.saveFornecedorDTO(fornecedorDTO), HttpStatus.CREATED);
 	}
 

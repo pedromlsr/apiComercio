@@ -1,9 +1,16 @@
 package com.residencia.comercio.dtos;
 
+import javax.validation.constraints.NotBlank;
+
 public class ProdutoDTO {
 	private Integer idProduto;
+	
+	@NotBlank(message = "O sku do produto não pode ficar em branco.")
 	private String sku;
+	
+	@NotBlank(message = "O nome do produto não pode ficar em branco.")
 	private String nomeProduto;
+	
 	private Integer idFornecedor;
 	private String nomeFornecedor;
 	private Integer idCategoria;

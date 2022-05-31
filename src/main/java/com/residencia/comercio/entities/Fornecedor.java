@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -38,20 +39,26 @@ public class Fornecedor {
 	private String tipo;
 
 	@Column(name = "razao_social")
+	@NotBlank(message = "A razão social não pode ficar em branco.")
 	private String razaoSocial;
 
 	@Column(name = "uf")
 	@Size(min = 2, max = 2, message = "A UF deve conter 2 caracteres.")
 	private String uf;
-
+	
 	@Column(name = "telefone")
+	@NotBlank(message = "O telefone não pode ficar em branco.")
+	@Size(max = 13, message = "O telefone não pode conter mais do que 13 caracters.")
+	@Pattern(regexp = "([(]?[0-9]{2}[)]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
 	private String telefone;
 
-	@Email(message = "Confira o padrão do email inserido.")
 	@Column(name = "email")
+	@NotBlank(message = "O email não pode ficar em branco.")
+	@Email(message = "Confira o padrão do email inserido.")
 	private String email;
 
 	@Column(name = "nome_fantasia")
+	@NotBlank(message = "O nome fantasia não pode ficar em branco.")
 	private String nomeFantasia;
 
 	@Column(name = "status_situacao")
@@ -77,6 +84,7 @@ public class Fornecedor {
 	private String municipio;
 
 	@Column(name = "data_abertura")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataAbertura;
 
 	@OneToMany(mappedBy = "fornecedor")

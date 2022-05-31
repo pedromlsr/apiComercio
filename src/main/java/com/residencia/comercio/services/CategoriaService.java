@@ -17,6 +17,12 @@ public class CategoriaService {
 	@Autowired
 	CategoriaRepository categoriaRepository;
 	
+	@Autowired
+	ArquivoService arquivoService;
+	
+	@Autowired
+	EmailService emailService;
+	
 	public List<Categoria> findAllCategoria(){
 		return categoriaRepository.findAll();
 	}
@@ -51,7 +57,7 @@ public class CategoriaService {
 		return converterEntidadeParaDto(novoCategoria);
 	}
 	
-	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file) {
+	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file) throws Exception {
 		
 		Categoria categoriaConvertida = new Categoria();
 		
@@ -61,31 +67,26 @@ public class CategoriaService {
 		} catch(IOException e) {
 			System.out.println("Ocorreu um erro na conversão.");
 		}
-		
-		
-//		while (null!=categoriaRepository.existsNomeImagem(categoriaConvertida.getNomeImagem())) {
-//            categoriaConvertida.setNomeImagem(categoriaConvertida.getNomeImagem());
-//        } else {
-//        	categoriaConvertida.set
-//        }
-		
-//		if (categoriaRepository.existsByNomeImagem(file.getOriginalFilename()) == false) {
-//			Categoria categoriaBD = categoriaRepository.save(categoriaConvertida);
-//		} else {
-//			categoriaConvertida.setNomeImagem(file.getOriginalFilename() + );
-//		}
-		
-//		if (categoriaConvertida.getNomeImagem().equals(categoriaRepository.findByNomeImagem(file.getOriginalFilename()))) {
-//			
-//		}
 
 		Categoria categoriaBD = categoriaRepository.save(categoriaConvertida);
 		
-		categoriaBD.setNomeImagem(categoriaBD.getIdCategoria() + "_" + file.getOriginalFilename());
+		categoriaBD.setNomeImagem(file.getOriginalFilename() + "_" + categoriaBD.getIdCategoria());
 		
 		Categoria categoriaAtualizada = categoriaRepository.save(categoriaBD);
 		
-		return null;
+//		Chamando o método que fará a cópia do arquivo para a pasta definida
+		try {
+			arquivoService.criarArquivo(categoriaBD.getIdCategoria() + "_" + file.getOriginalFilename(), file);
+		} catch (Exception e) {
+			throw new Exception("Ocorreu um erro ao tentar copiar o arquivo - " + e.getStackTrace());
+		}
+		
+//		Cuidado para definir um endereço válido quando for fazer de verdade
+		String corpoEmail = "Foi cadastrada uma nova categoria:" + categoriaAtualizada.toString();
+//		emailService.enviarEmailTexto("teste@teste.com", "Cadastro de Categoria", corpoEmail);
+		emailService.enviarEmailHtml(file, "teste@teste.com", "Cadastro de Categoria", corpoEmail);
+		
+		return categoriaAtualizada;
 	}
 	
 	public Categoria updateCategoria(Categoria categoria) {

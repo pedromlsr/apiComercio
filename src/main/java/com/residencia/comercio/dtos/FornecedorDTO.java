@@ -2,16 +2,44 @@ package com.residencia.comercio.dtos;
 
 import java.util.Date;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.br.CNPJ;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FornecedorDTO {
 	private Integer idFornecedor;
+	
+	@NotBlank(message = "O número do CNPJ não pode ficar em branco.")
+	@CNPJ(message = "Confira o padrão do CNPJ inserido.")
 	private String cnpj;
+	
 	private String tipo;
+	
+	@NotBlank(message = "A razão social não pode ficar em branco.")
 	private String razaoSocial;
+	
+	@NotBlank(message = "O telefone não pode ficar em branco.")
+	@Size(max = 13, message = "O telefone não pode conter mais do que 13 caracters.")
+	@Pattern(regexp = "([(]?[0-9]{2}[)]?[0-9]{4}[-]?[0-9]{4})", message = "Confira o padrão do telefone.")
 	private String telefone;
+	
+	@NotBlank(message = "O email não pode ficar em branco.")
+	@Email(message = "Confira o padrão do email inserido.")
 	private String email;
+	
+	@NotBlank(message = "O nome fantasia não pode ficar em branco.")
 	private String nomeFantasia;
+	
 	private String statusSituacao;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataAbertura;
+	
 	private String numero;
 	private String logradouro;
 	private String bairro;

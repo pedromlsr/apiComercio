@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,9 +25,10 @@ public class Categoria {
 	private Integer idCategoria;
 
 	@Column(name = "nome_categoria")
+	@Size(max = 50, message = "O nome da categoria não pode conter mais do que 50 caracteres.")
 	@NotBlank(message = "O nome da categoria não pode ficar em branco.")
 	private String nomeCategoria;
-
+	
 	@Column(name = "imagem")
 	private String nomeImagem;
 
@@ -63,6 +65,12 @@ public class Categoria {
 
 	public void setProdutoList(List<Produto> produtoList) {
 		this.produtoList = produtoList;
+	}
+
+	@Override
+	public String toString() {
+		return "Categoria [idCategoria=" + idCategoria + ", nomeCategoria=" + nomeCategoria + ", nomeImagem="
+				+ nomeImagem + ", produtoList=" + produtoList + "]";
 	}
 
 }
