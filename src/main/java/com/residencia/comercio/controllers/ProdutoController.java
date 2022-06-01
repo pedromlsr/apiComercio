@@ -48,9 +48,9 @@ public class ProdutoController {
 
 		if (produtoList.isEmpty()) {
 			throw new NoSuchElementFoundException("Nenhum produto encontrado.");
-		} else {
-			return new ResponseEntity<>(produtoList, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(produtoList, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -63,9 +63,9 @@ public class ProdutoController {
 		Produto produto = produtoService.findProdutoById(id);
 		if (produto == null) {
 			throw new NoSuchElementFoundException("O Produto de id = " + id + " não foi encontrado.");
-		} else {
-			return new ResponseEntity<>(produto, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(produto, HttpStatus.OK);
 	}
 
 	@GetMapping("/dto/{id}")
@@ -79,9 +79,9 @@ public class ProdutoController {
 
 		if (produtoDTO == null) {
 			throw new NoSuchElementFoundException("O Produto de id = " + id + " não foi encontrado.");
-		} else {
-			return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
 	}
 
 //	Request - localhost:8080/comercio/produto/query?sku=

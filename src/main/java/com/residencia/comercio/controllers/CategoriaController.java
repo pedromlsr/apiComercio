@@ -47,9 +47,9 @@ public class CategoriaController {
 
 		if (categoriaList.isEmpty()) {
 			throw new NoSuchElementFoundException("Nenhuma categoria encontrada.");
-		} else {
-			return new ResponseEntity<>(categoriaList, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(categoriaList, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -112,8 +112,8 @@ public class CategoriaController {
 			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<Categoria> updateCategoria(@Valid @RequestBody Categoria categoria) {
 		if (categoriaService.findCategoriaById(categoria.getIdCategoria()) == null) {
-			throw new NoSuchElementFoundException(
-					"Não foi possível atualizar. A Categoria de id = " + categoria.getIdCategoria() + " não foi encontrada.");
+			throw new NoSuchElementFoundException("Não foi possível atualizar. A Categoria de id = "
+					+ categoria.getIdCategoria() + " não foi encontrada.");
 		}
 
 		return new ResponseEntity<>(categoriaService.updateCategoria(categoria), HttpStatus.OK);
@@ -126,12 +126,13 @@ public class CategoriaController {
 			@ApiResponse(responseCode = "500", description = "Falha. Erro inesperado.", content = @Content) })
 	public ResponseEntity<String> deleteCategoria(@RequestBody Categoria categoria) {
 		if (categoriaService.findCategoriaById(categoria.getIdCategoria()) == null) {
-			throw new NoSuchElementFoundException(
-					"Não foi possível excluir. A Categoria de id = " + categoria.getIdCategoria() + " não foi encontrada.");
+			throw new NoSuchElementFoundException("Não foi possível excluir. A Categoria de id = "
+					+ categoria.getIdCategoria() + " não foi encontrada.");
 		}
 
 		categoriaService.deleteCategoria(categoria);
-		return new ResponseEntity<>("A Categoria de id = " + categoria.getIdCategoria() + " foi excluída com sucesso.", HttpStatus.OK);
+		return new ResponseEntity<>("A Categoria de id = " + categoria.getIdCategoria() + " foi excluída com sucesso.",
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

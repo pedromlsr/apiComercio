@@ -46,9 +46,9 @@ public class FornecedorController {
 
 		if (fornecedorList.isEmpty()) {
 			throw new NoSuchElementFoundException("Nenhum fornecedor encontrado.");
-		} else {
-			return new ResponseEntity<>(fornecedorList, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(fornecedorList, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -61,9 +61,9 @@ public class FornecedorController {
 		Fornecedor fornecedor = fornecedorService.findFornecedorById(id);
 		if (fornecedor == null) {
 			throw new NoSuchElementFoundException("O Fornecedor de id = " + id + " não foi encontrado.");
-		} else {
-			return new ResponseEntity<>(fornecedor, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(fornecedor, HttpStatus.OK);
 	}
 
 	@GetMapping("/dto/{id}")
@@ -76,9 +76,9 @@ public class FornecedorController {
 		FornecedorDTO fornecedorDto = fornecedorService.findFornecedorDTOById(id);
 		if (fornecedorDto == null) {
 			throw new NoSuchElementFoundException("O Fornecedor de id = " + id + " não foi encontrado.");
-		} else {
-			return new ResponseEntity<>(fornecedorDto, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(fornecedorDto, HttpStatus.OK);
 	}
 
 	@GetMapping("/cnpj/{cnpj}")
@@ -86,9 +86,9 @@ public class FornecedorController {
 		EmpresaDTO empresaDTO = fornecedorService.consultarDadosPorCnpj(cnpj);
 		if (empresaDTO.getCnpj() == null) {
 			throw new NoSuchElementFoundException("Não foram encontrados dados para o CNPJ informado.");
-		} else {
-			return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
 	}
 
 	@GetMapping("/cep/{cep}")
@@ -96,9 +96,9 @@ public class FornecedorController {
 		EnderecoDTO enderecoDTO = fornecedorService.consultarEnderecoPorCep(cep);
 		if (enderecoDTO.getCep() == null) {
 			throw new NoSuchElementFoundException("Não foi encontrado um endereço para o CEP informado.");
-		} else {
-			return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
 		}
+
+		return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
 	}
 
 	@PostMapping
